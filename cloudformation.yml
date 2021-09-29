@@ -1,5 +1,13 @@
 AWSTemplateFormatVersion: 2010-09-09
 
+Parameters:
+
+  CertificateArn:
+    Type: String
+
+  LegacyCertificateArn:
+    Type: String
+
 Resources:
 
   Api:
@@ -79,3 +87,48 @@ Resources:
       Role: !GetAtt LambdaRole.Arn
       Runtime: python3.9
       Timeout: 30
+
+  Hyp3DomainName:
+    Type: AWS::ApiGatewayV2::DomainName
+    Properties:
+      DomainName: hyp3.asf.alaska.edu
+      DomainNameConfigurations:
+        - CertificateArn: !Ref CertificateArn
+          EndpointType: REGIONAL
+
+  Hyp3Mapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    Properties:
+      ApiId: !Ref Api
+      DomainName: !Ref Hyp3DomainName
+      Stage: $default
+
+  Hyp3ApiDomainName:
+    Type: AWS::ApiGatewayV2::DomainName
+    Properties:
+      DomainName: api.hyp3.asf.alaska.edu
+      DomainNameConfigurations:
+        - CertificateArn: !Ref LegacyCertificateArn
+          EndpointType: REGIONAL
+
+  Hyp3ApiMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    Properties:
+      ApiId: !Ref Api
+      DomainName: !Ref Hyp3ApiDomainName
+      Stage: $default
+
+  Hyp3DownloadDomainName:
+    Type: AWS::ApiGatewayV2::DomainName
+    Properties:
+      DomainName: hyp3-download.asf.alaska.edu
+      DomainNameConfigurations:
+        - CertificateArn: !Ref CertificateArn
+          EndpointType: REGIONAL
+
+  Hyp3DownloadMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    Properties:
+      ApiId: !Ref Api
+      DomainName: !Ref Hyp3DownloadDomainName
+      Stage: $default
