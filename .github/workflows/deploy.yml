@@ -31,5 +31,4 @@ jobs:
             --role-arn ${{ secrets.CLOUDFORMATION_ROLE_ARN }} \
             --capabilities CAPABILITY_IAM \
             --parameter-overrides \
-                CertificateArn=${{ secrets.CERTIFICATE_ARN }} \
-                LegacyCertificateArn=${{ secrets.LEGACY_CERTIFICATE_ARN }}
+                CertificateArn=${{ secrets.CERTIFICATE_ARN }}
